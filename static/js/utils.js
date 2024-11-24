@@ -51,7 +51,7 @@ function vis(obj_file_path, doc_canvas_id, texture_file_path=null, opts={}) {
     let width = _get_width();
     let height = _get_height();
 
-    rotated = true;
+    rotated = false;
     if (opts['rotated'] !== undefined) {
         rotated = opts['rotated'];
     }
@@ -266,7 +266,7 @@ function ply_vis(ply_file_path, doc_canvas_id, opts={}) {
     let width = _get_width();
     let height = _get_height();
 
-    rotated = true;
+    rotated = false;
     if (opts['rotated'] !== undefined) {
         rotated = opts['rotated'];
     }

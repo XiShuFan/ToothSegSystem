@@ -3,13 +3,13 @@ from time import time
 import zipfile
 import numpy as np
 import open3d as o3d
-import tensorflow as tf
+# import tensorflow as tf
 
 from plyfile import PlyData, PlyElement
 
 from PointCloudManage.exception import ShapeException, FileExistsException
 from PointCloudManage.upsample_op.config import CFG
-from PointCloudManage.upsample_op.model import Model
+# from PointCloudManage.upsample_op.model import Model
 
 
 # others

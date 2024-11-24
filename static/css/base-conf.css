@@ -195,7 +195,7 @@
    -o-transition: margin-left 0.3s ease-in-out;
    transition: margin-left 0.3s ease-in-out;
    margin-bottom: 0;
-   margin-left: 230px;
+   margin-left: 0px;
    border: none;
    min-height: 50px;
    border-radius: 0;
@@ -4936,4 +4936,17 @@
      white-space: normal !important;
    }
  }
- 
+
+.content-wrapper {
+    margin-left: 0 !important; /* 取消和侧边栏的间距 */
+    margin-right: 0 !important;
+    padding-left: 0 !important; /* 去掉内边距 */
+    padding-right: 0 !important;
+}
+
+.container-fluid .navbar{
+  width: 100% !important; /* 确保占满整个宽度 */
+  margin: 0 !important;    /* 取消默认的外边距 */
+  padding: 0 !important;   /* 取消默认的内边距 */
+}
+

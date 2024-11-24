@@ -1,11 +1,10 @@
 {% load static %}
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>Point Cloud Visualization Platform</title>
+  <title>口扫模型分割-特征点检测平台</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   
   <!--
@@ -22,31 +21,24 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
+
   <header class="main-header">
-    <a href="#" class="logo"></a>
+    <!--<a href="#" class="logo"></a>-->
     <nav class="navbar navbar-static-top" role="navigation">
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-      </a>
-      <div class="navbar-custom-menu">
-      </div>
+        <ul class="nav navbar-nav">
+            <li><a href="{% url 'PointCloudManage:index' %}"><i class="fa fa-user"></i> 主页</a></li>
+            <li><a href="{% url 'PointCloudManage:pcupsample-display-page' %}"><i class="fa fa-television"></i> 点云上采样展示</a></li>
+            <li><a href="{% url 'PointCloudManage:sceneupsample-display-page' %}"><i class="fa fa-adjust"></i> 场景上采样展示</a></li>
+            <li><a href="{% url 'PointCloudManage:segdataset-display-page' %}"><i class="fa fa-print"></i> 分割数据集展示</a></li>
+            <li><a href="{% url 'PointCloudManage:sceneseg-display-page' %}"><i class="fa fa-tags"></i> 场景分割展示</a></li>
+            <li><a href="{% url 'PointCloudManage:mypcbase-upload-page' %}"><i class="fa fa-upload"></i> 点云模型上传</a></li>
+            <li><a href="{% url 'PointCloudManage:mypcbase-display-page' %}"><i class="fa fa-folder"></i> 我的点云模型库</a></li>
+            <li><a href="{% url 'PointCloudManage:recyclebin-display-page' %}"><i class="fa fa-trash"></i> 回收站</a></li>
+        </ul>
     </nav>
   </header>
 
-  <aside class="main-sidebar">
-    <section class="sidebar">
-      <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">导航栏</li>
-        <li><a href="{% url 'PointCloudManage:index' %}"><i class="fa fa-user"></i> <span>主页</span></a></li>
-        <li><a href="{% url 'PointCloudManage:pcupsample-display-page' %}"><i class="fa fa-television"></i> <span>点云上采样展示</span></a></li>
-        <li><a href="{% url 'PointCloudManage:sceneupsample-display-page' %}"><i class="fa fa-adjust"></i> <span>场景上采样展示</span></a></li>
-        <li><a href="{% url 'PointCloudManage:segdataset-display-page' %}"><i class="fa fa-print"></i> <span>分割数据集展示</span></a></li>
-        <li><a href="{% url 'PointCloudManage:sceneseg-display-page' %}"><i class="fa fa-tags"></i> <span>场景分割展示</span></a></li>
-        <li><a href="{% url 'PointCloudManage:mypcbase-upload-page' %}"><i class="fa fa-upload"></i> <span>点云模型上传</span></a></li>
-        <li><a href="{% url 'PointCloudManage:mypcbase-display-page' %}"><i class="fa fa-folder"></i> <span>我的点云模型库</span></a></li>
-        <li><a href="{% url 'PointCloudManage:recyclebin-display-page' %}"><i class="fa fa-trash"></i> <span>回收站</span></a></li>
-      </ul>
-    </section>
-  </aside>
 
   <div class="content-wrapper">
     {% block breadcrumb %}{% endblock %}
@@ -54,65 +46,8 @@
       {% block content %}{% endblock %}
     </section>
 
-    <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-          data-backdrop='static'>
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel"><strong>提示</strong></h4>
-                </div>
-                <div class="modal-body">
-                    <div id="progress-loading-box" class="progress progress-striped">
-                      <div id="progress-bar-loading-box" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                        0%
-                      </div>
-                    </div>
-                    <div id="loading-body" class="alert alert-info"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="succ-msg-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             data-backdrop='static'>
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h4 class="modal-title" id="myModalLabel"><strong>提示</strong></h4>
-                  </div>
-                  <div class="modal-body">
-                      <div class="alert alert-success" id="succ-msg-box-body"></div>
-                      <div class="row">
-                          <button type="button" class="btn btn-secondary col-xs-offset-10" id="succ-msg-box-btn">我知道了</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      <div class="modal fade" id="err-msg-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            data-backdrop='static'>
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h4 class="modal-title" id="myModalLabel"><strong>提示</strong></h4>
-                  </div>
-                  <div class="modal-body">
-                      <div class="alert alert-danger" id="err-msg-box-body"></div>
-                      <div class="row">
-                          <button type="button" class="btn btn-secondary col-xs-offset-10" id="err-msg-box-btn">我知道了</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
   </div>
 
-  <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-    </div>
-    <strong><a href="" target="_blank">三维模型可视化展示平台</a></strong>
-  </footer>
 </div>
 
 <!-- 
@@ -132,23 +67,6 @@
 <script src="{% static 'external/PLYLoader.js' %}"></script>
 <script src="{% static 'js/base-conf.js' %}"></script>
 <script src="{% static 'js/utils.js' %}"></script>
-<script>
-  $('#succ-msg-box-btn').click(function () {
-    $('#succ-msg-box').modal('hide');
-  });
-  
-  $('#err-msg-box-btn').click(function () {
-    $('#err-msg-box').modal('hide');
-  });
-  
-  $.ajax({
-    url: '/mypcbase-clear-temp-dir/',
-    type: 'GET',
-    data: { 'limited_time': 1800 },
-    dataType: 'JSON',
-    success: function (data) {}
-  });
-</script>
 
 {% block script %}{% endblock %}
 
