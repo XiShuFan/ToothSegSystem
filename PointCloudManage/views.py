@@ -28,13 +28,9 @@ UPSAMPLE_DIRNAME = 'upsample'
 
 # for page-render request (page)
 def index(request):
-    file_names = [os.path.basename(file_path) for file_path in glob(os.path.join(STATIC_DIR, 'models', '*.ply'))]
-    ids = [i for i in range(len(file_names))]
-    np.random.shuffle(ids)
-    
-    ply_file_path1 = '/static/models/%s' % file_names[ids[0]]
-    ply_file_path2 = '/static/models/%s' % file_names[ids[1]]
-    ply_file_path3 = '/static/models/%s' % file_names[ids[2]]
+    oral_scan_path = '/static/models/0140W3ND_lower_origin.ply'
+    seg_path = '/static/models/0140W3ND_lower.ply'
+    landmark_path = '/static/models/0140W3ND_lower.ply'
     
     return render(request, 'index.html', locals())
 

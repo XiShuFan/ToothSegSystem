@@ -277,8 +277,10 @@ function ply_vis(ply_file_path, doc_canvas_id, opts={}) {
     if (opts['rotate_speed'] !== undefined) { rotate_speed = opts['rotate_speed']; }
     let rotate_axis = 'y';
     if (opts['rotate_axis'] !== undefined) { rotate_axis = opts['rotate_axis']; }
-    let canvas_color = 0xFFFFFF;
+    let canvas_color = 0xD0D0D0;
     if (opts['canvas_color'] !== undefined) { canvas_color = COLORNAME2RGB[CHINESE2ENGLISH[opts['canvas_color']]]; }
+    let fixed_color = false
+    if (opts['fixed_color'] !== undefined) { fixed_color = opts['fixed_color']; }
 
     let requestAnimationFrame = (function () {
         return window.requestAnimationFrame ||
@@ -373,6 +375,116 @@ function ply_vis(ply_file_path, doc_canvas_id, opts={}) {
         });
     }
 
+    function insertObj_normalize() {
+        let loader = new THREE.PLYLoader();
+        loader.load(ply_file_path, function (geometry) {
+            let scale_ratio = opts['scale_ratio'];
+
+
+            // 获取顶点位置数组
+            let positions = geometry.attributes.position.array;
+
+            // 创建一个新的数组存储转换后的顶点
+            let transformedPositions = new Float32Array(positions.length);
+
+            for (let i = 0; i < positions.length; i += 3) {
+                let x = positions[i];
+                let y = positions[i + 1];
+                let z = positions[i + 2];
+
+                // 转换为 zxy
+                transformedPositions[i] = x;
+                transformedPositions[i + 1] = z;
+                transformedPositions[i + 2] = y;
+            }
+
+            // 更新几何体的顶点位置
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(transformedPositions, 3));
+
+
+            // 更新顶点法向量
+            geometry.computeVertexNormals();
+
+            // 计算几何体质心
+            geometry.computeBoundingBox();
+            let boundingBox = geometry.boundingBox;
+            let center = new THREE.Vector3();
+            boundingBox.getCenter(center);
+
+            // 平移几何体到原点
+            geometry.translate(-center.x, -center.y, -center.z);
+
+            // 计算包围盒的最大边长
+            let size = new THREE.Vector3();
+            boundingBox.getSize(size); // 获取包围盒的尺寸
+            let maxLength = Math.max(size.x, size.y, size.z); // 找到最长边
+
+            // 计算缩放比例
+            target_length = 2
+            let norm_ratio = target_length / maxLength;
+            scale_ratio *= norm_ratio
+
+            // 创建材质并添加到场景
+            // let material = new THREE.PointsMaterial({ size: point_size });
+            // material.vertexColors = true;
+            // let mesh = new THREE.Points(geometry, material);
+
+            // 创建一个基本的 Mesh 材质
+            let material;
+            if (fixed_color) {
+                material = new THREE.MeshBasicMaterial({
+                    wireframe: true,  // 是否显示线框，设为 true 会显示线框
+                    side: THREE.DoubleSide, // 双面渲染（可选）
+                    flatShading: true,   // 平面阴影
+                    color: 0xFFFFFF,    // 固定颜色
+                });
+            } else {
+                material = new THREE.MeshBasicMaterial({
+                    wireframe: true,  // 是否显示线框，设为 true 会显示线框
+                    side: THREE.DoubleSide, // 双面渲染（可选）
+                    flatShading: true,   // 平面阴影
+                    vertexColors: true,  // 顶点颜色
+                });
+            }
+
+            // 创建一个 Mesh 对象并将几何体和材质传入
+            let mesh = new THREE.Mesh(geometry, material);
+
+
+            // 缩放模型
+            mesh.scale.set(scale_ratio, scale_ratio, scale_ratio);
+
+            group.add(mesh);
+            scene.add(group);
+        },
+        function (xhr) {
+            // 进度条逻辑
+            if (opts['doc_progress_id'] !== undefined && opts['doc_progress_bar_id'] !== undefined) {
+                let progress = $('#' + opts['doc_progress_id']);
+                let progress_bar = $('#' + opts['doc_progress_bar_id']);
+
+                let progress_val = parseInt(xhr.loaded / xhr.total * 100);
+                progress_bar.attr('aria-valuenow', progress_val);
+                progress_bar.attr('style', 'width:' + progress_val + '%');
+                progress_bar.html('' + progress_val + '%');
+
+                if (progress_val === 100) {
+                    progress_bar.addClass('progress-bar-success');
+                    progress_bar.html('加载完成');
+                    if (opts['progress_hide']) {
+                        setTimeout(function () {
+                            progress.hide();
+                        }, 2000);
+                    }
+                }
+            }
+        },
+        function (error) {
+            console.error('加载 PLY 文件时出错:', error);
+        });
+    }
+
+
     //场景内添加灯
     function insertOther() {
         //环境光
@@ -421,7 +533,7 @@ function ply_vis(ply_file_path, doc_canvas_id, opts={}) {
 
     function init() {
         prepareRender();
-        insertObj();
+        insertObj_normalize();
         insertOther();
         animate();
     }
