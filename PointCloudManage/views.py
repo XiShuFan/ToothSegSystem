@@ -111,19 +111,8 @@ def pcupsample_vis_page(request, pc_name):
 
 def sceneupsample_display_page(request):
     folder_path = os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME)
-    pc_names = [get_file_name(os.path.basename(file_path)) for file_path in glob(os.path.join(folder_path, '*.xyz'))]
+    pc_names = [get_file_name(os.path.basename(file_path)) for file_path in glob(os.path.join(folder_path, 'oral_scans', '*.ply'))]
     pc_names.sort()
-
-    for pc_name in pc_names:
-        xyz_file_path = os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME, '%s.xyz' % pc_name)
-        ply_file_path = os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME, '%s.ply' % pc_name)
-        if not os.path.exists(ply_file_path):
-            xyz2ply(xyz_file_path, ply_file_path)
-
-        xyz_file_path = os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME, UPSAMPLE_DIRNAME, '%s.xyz' % pc_name)
-        ply_file_path = os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME, UPSAMPLE_DIRNAME, '%s.ply' % pc_name)
-        if not os.path.exists(ply_file_path):
-            xyz2ply(xyz_file_path, ply_file_path)
     
     num_models = len(pc_names)
     show_pages = (num_models > 0)
@@ -156,13 +145,15 @@ def sceneupsample_vis_page(request):
         return render(request, '404.html', locals())
     pc_name = request.GET['pc_name']
 
-    exists = os.path.exists(os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME, '%s.ply' % pc_name))
-    exists &= os.path.exists(os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME, UPSAMPLE_DIRNAME, '%s.ply' % pc_name))
-    if not exists:
-        return render(request, '404.html', locals())
+    img_names = [get_file_name(os.path.basename(file_path)) for file_path in
+                glob(os.path.join(STATIC_DIR, SCENEUPSAMPLE_DIRNAME, 'render_imgs', pc_name, 'img', '*.png'))]
+    # 排序来看
+    img_names.sort()
+    image_paths = []
+    for name in img_names:
+        image_paths.append(os.path.join('/static', SCENEUPSAMPLE_DIRNAME, 'render_imgs', pc_name, 'img', '%s.png' % name))
+        image_paths.append(os.path.join('/static', SCENEUPSAMPLE_DIRNAME, 'render_imgs', pc_name, 'label', '%s.png' % name))
 
-    raw_file_path = os.path.join('/static', SCENEUPSAMPLE_DIRNAME, '%s.ply' % pc_name)
-    upsample_file_path = os.path.join('/static', SCENEUPSAMPLE_DIRNAME, UPSAMPLE_DIRNAME, '%s.ply' % pc_name)
     return render(request, 'sceneupsample-vis.html', locals())
 
 

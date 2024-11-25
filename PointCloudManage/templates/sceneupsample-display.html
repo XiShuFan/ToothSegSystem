@@ -9,7 +9,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    场景上采样
+    口扫模型渲染
     <small>展示</small>
   </h1>
   <ol class="breadcrumb">
@@ -98,8 +98,8 @@ $(function () {
   let input_file;
 
   {% for pc_name in pc_names %}
-    input_file = '/static/sceneupsample/{{pc_name}}.ply';
-    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = true;
+    input_file = '/static/sceneupsample/oral_scans/{{pc_name}}.ply';
+    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = false;
     ply_vis(input_file, 'canvas-{{pc_name}}', objClone(opts));
 
     $('#vis-btn-{{pc_name}}').click(function () {
