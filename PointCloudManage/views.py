@@ -30,7 +30,22 @@ UPSAMPLE_DIRNAME = 'upsample'
 def index(request):
     oral_scan_path = '/static/models/0140W3ND_lower_origin.ply'
     seg_path = '/static/models/0140W3ND_lower.ply'
-    landmark_path = '/static/models/0140W3ND_lower.ply'
+    landmark_mesh_path = ['/static/models/0140W3ND_lower/0140W3ND_lower_LL1.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LL2.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LL3.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LL4.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LL5.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LL6.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LL7.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR1.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LR2.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR3.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LR4.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR5.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LR6.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR7.ply']
+    landmark_mesh_path = json.dumps(landmark_mesh_path)
+    landmark_point_path = ['/static/models/0140W3ND_lower/0140W3ND_lower_LL1_landmarks.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LL2_landmarks.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LL3_landmarks.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LL4_landmarks.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LL5_landmarks.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LL6_landmarks.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LL7_landmarks.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR1_landmarks.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LR2_landmarks.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR3_landmarks.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LR4_landmarks.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR5_landmarks.ply',
+                          '/static/models/0140W3ND_lower/0140W3ND_lower_LR6_landmarks.ply', '/static/models/0140W3ND_lower/0140W3ND_lower_LR7_landmarks.ply']
+    landmark_point_path = json.dumps(landmark_point_path)
     
     return render(request, 'index.html', locals())
 

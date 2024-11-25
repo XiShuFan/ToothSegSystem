@@ -59,9 +59,11 @@
       ply_vis(ply_file_path2, doc_canvas_id2, objClone(opts));
 
       opts['doc_progress_id'] = 'progress3'; opts['doc_progress_bar_id'] = 'progress-bar3'; opts['progress_hide'] = true;
-      opts['fixed_color'] = false
-      let ply_file_path3 = '{{landmark_path}}'; let doc_canvas_id3 = 'canvas3';
-      ply_vis(ply_file_path3, doc_canvas_id3, objClone(opts));
+      opts['fixed_color'] = true
+      let landmark_mesh_path = {{landmark_mesh_path | safe}};
+      let landmark_point_path = {{landmark_point_path | safe}};
+      let doc_canvas_id3 = 'canvas3';
+      ply_vis_landmark(landmark_mesh_path, landmark_point_path, doc_canvas_id3, objClone(opts));
   });
   </script>
 {% endblock %}
