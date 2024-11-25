@@ -93,15 +93,15 @@
 $(function () {
     let opts = {
     'height_ratio': 3.0,
-    'scale_ratio': 160
+    'scale_ratio': 120
     };
     let input_file;
     let texture_file_path = '/static/pcupsample/texture.png';
 
     {% for pc_name in pc_names %}
-    input_file = '/static/pcupsample/input/{{pc_name}}.obj';
-    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = true;
-    vis(input_file, 'canvas-{{pc_name}}', texture_file_path, objClone(opts));
+    input_file = '/static/pcupsample/oral_scans/{{pc_name}}.ply';
+    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = false;
+    ply_vis(input_file, 'canvas-{{pc_name}}', objClone(opts));
 
     $('#vis-btn-{{pc_name}}').click(function () {
         window.location.href = '/pcupsample-vis-page/{{pc_name}}/';

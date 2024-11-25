@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}点云上采样{% endblock %}
+{% block title %}口扫模型下采样{% endblock %}
 
 {% block css %}
 {% endblock %}
@@ -9,7 +9,7 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        点云上采样
+        口扫模型下采样
         <small>可视化</small>
       </h1>
       <ol class="breadcrumb">
@@ -35,7 +35,7 @@
             <div class="text-center ">
                 <h4>
                     <span class="label label-default">输入点云模型</span>
-                    <a href="/static/pcupsample/input/{{pc_name}}.xyz"><span class="label label-primary">下载</span></a>
+                    <a href="/static/pcupsample/oral_scans/{{pc_name}}.ply"><span class="label label-primary">下载</span></a>
                 </h4>
             </div>
             <div id="canvas1"></div>
@@ -49,8 +49,8 @@
         <div class="col-xs-4">
             <div class="text-center">
                 <h4>
-                    <span class="label label-default">预估点云模型</span>
-                    <a href="/static/pcupsample/pred/{{pc_name}}.xyz"><span class="label label-primary">下载</span></a>
+                    <span class="label label-default">QEM下采样模型</span>
+                    <a href="/static/pcupsample/oral_scans/{{pc_name}}_qem_downsample.ply"><span class="label label-primary">下载</span></a>
                 </h4>
             </div>
             <div id="canvas2"></div>
@@ -64,8 +64,8 @@
         <div class="col-xs-4">
             <div class="text-center">
                 <h4>
-                    <span class="label label-default">标准点云模型</span>
-                    <a href="/static/pcupsample/gt/{{pc_name}}.xyz"><span class="label label-primary">下载</span></a>
+                    <span class="label label-default">选择性下采样模型</span>
+                    <a href="/static/pcupsample/oral_scans/{{pc_name}}_selective_downsample.ply"><span class="label label-primary">下载</span></a>
                 </h4>
             </div>
             <div id="canvas3"></div>
@@ -86,8 +86,8 @@
 <script>
 $(function () {
     let input_file = '{{ input_file }}';
-    let pred_file = '{{ pred_file }}';
-    let gt_file = '{{ gt_file }}';
+    let qem_file = '{{ qem_file }}';
+    let selective_file = '{{ selective_file }}';
 
     let opts = {
         'height_ratio': 1.6,
@@ -98,15 +98,15 @@ $(function () {
     
     let opts1 = JSON.parse(JSON.stringify(opts)); // deep copy
     opts1['doc_progress_bar_id'] = 'progress-bar1'; opts1['doc_progress_id'] = 'progress1';
-    vis(input_file, 'canvas1', texture_file_path, opts1);
+    ply_vis(input_file, 'canvas1', opts1);
     
     let opts2 = JSON.parse(JSON.stringify(opts));
     opts2['doc_progress_bar_id'] = 'progress-bar2'; opts2['doc_progress_id'] = 'progress2';
-    vis(pred_file, 'canvas2', texture_file_path, opts2);
+    ply_vis(qem_file, 'canvas2', opts2);
 
     let opts3 = JSON.parse(JSON.stringify(opts));
     opts3['doc_progress_bar_id'] = 'progress-bar3'; opts3['doc_progress_id'] = 'progress3';
-    vis(gt_file, 'canvas3', texture_file_path, opts3);
+    ply_vis(selective_file, 'canvas3', opts3);
 });
 </script>
 

@@ -51,8 +51,10 @@ def index(request):
 
 
 def pcupsample_display_page(request):
-    folder_path = os.path.join(STATIC_DIR, PCUPSAMPLE_DIRNAME, 'input')
-    pc_names = [get_file_name(file_path) for file_path in glob(os.path.join(folder_path, '*.xyz'))]
+    folder_path = os.path.join(STATIC_DIR, PCUPSAMPLE_DIRNAME, 'oral_scans')
+    pc_names = [get_file_name(file_path)
+                for file_path in glob(os.path.join(folder_path, '*.ply'))
+                if 'qem' not in file_path and 'selective' not in file_path]
     pc_names.sort()
     
     num_models = len(pc_names)
@@ -78,12 +80,12 @@ def pcupsample_display_page(request):
     end_id = request_page_id * num_per_page
     pc_names = pc_names[start_id:end_id]
     
-    for pc_name in pc_names:
-        xyz_path = os.path.join(folder_path, '%s.xyz' % pc_name)
-        obj_path = os.path.join(folder_path, '%s.obj' % pc_name)
-        if os.path.exists(obj_path):
-            continue
-        generate_points_obj(xyz_path, obj_path, prog_record=False)
+    # for pc_name in pc_names:
+    #     xyz_path = os.path.join(folder_path, '%s.xyz' % pc_name)
+    #     obj_path = os.path.join(folder_path, '%s.obj' % pc_name)
+    #     if os.path.exists(obj_path):
+    #         continue
+    #     generate_points_obj(xyz_path, obj_path, prog_record=False)
     
     return render(request, 'pcupsample-display.html', locals())
 
@@ -91,26 +93,18 @@ def pcupsample_display_page(request):
 @csrf_exempt
 def pcupsample_vis_page(request, pc_name):
     folder_path = os.path.join(STATIC_DIR, 'pcupsample')
-    input_xyz_path = os.path.join(folder_path, 'input', '%s.xyz' % pc_name)
-    pred_xyz_path = os.path.join(folder_path, 'pred', '%s.xyz' % pc_name)
-    gt_xyz_path = os.path.join(folder_path, 'gt', '%s.xyz' % pc_name)
+    input_xyz_path = os.path.join(folder_path, 'oral_scans', '%s.ply' % pc_name)
+    qem_xyz_path = os.path.join(folder_path, 'oral_scans', '%s_qem_downsample.ply' % pc_name)
+    selective_xyz_path = os.path.join(folder_path, 'oral_scans', '%s_selective_downsample.ply' % pc_name)
     exists = os.path.exists(input_xyz_path)
-    exists &= os.path.exists(pred_xyz_path)
-    exists &= os.path.exists(gt_xyz_path)
+    exists &= os.path.exists(qem_xyz_path)
+    exists &= os.path.exists(selective_xyz_path)
     if not exists:
         return render(request, '404.html', locals())
-    
-    pred_obj_path = os.path.join(folder_path, 'pred', '%s.obj' % pc_name)
-    if not os.path.exists(pred_obj_path):
-        generate_points_obj(pred_xyz_path, pred_obj_path, prog_record=False)
 
-    gt_obj_path = os.path.join(folder_path, 'gt', '%s.obj' % pc_name)
-    if not os.path.exists(gt_obj_path):
-        generate_points_obj(gt_xyz_path, gt_obj_path, prog_record=False)
-
-    input_file = os.path.join('/static/pcupsample/input/', '%s.obj' % pc_name)
-    pred_file = os.path.join('/static/pcupsample/pred/', '%s.obj' % pc_name)
-    gt_file = os.path.join('/static/pcupsample/gt/', '%s.obj' % pc_name)
+    input_file = os.path.join('/static/pcupsample/oral_scans/', '%s.ply' % pc_name)
+    qem_file = os.path.join('/static/pcupsample/oral_scans/', '%s_qem_downsample.ply' % pc_name)
+    selective_file = os.path.join('/static/pcupsample/oral_scans/', '%s_selective_downsample.ply' % pc_name)
 
     return render(request, 'pcupsample-vis.html', locals())
 
