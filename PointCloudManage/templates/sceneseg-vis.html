@@ -75,6 +75,52 @@
           </div>
         </div>
         -->
+        <div class="col-xs-4">
+            <div class="text-center">
+                <h4><span class="label label-default">选择展示牙齿</span></h4>
+            </div>
+
+            <!-- 上颌区域 -->
+            <div class="checkbox-grid upper-jaw">
+                <label><input type="checkbox" id="UL1"> 上颌 L1</label>
+                <label><input type="checkbox" id="UL2"> 上颌 L2</label>
+                <label><input type="checkbox" id="UL3"> 上颌 L3</label>
+                <label><input type="checkbox" id="UL4"> 上颌 L4</label>
+                <label><input type="checkbox" id="UL5"> 上颌 L5</label>
+                <label><input type="checkbox" id="UL6"> 上颌 L6</label>
+                <label><input type="checkbox" id="UL7"> 上颌 L7</label>
+                <label><input type="checkbox" id="UL8"> 上颌 L8</label>
+                <label><input type="checkbox" id="UR1"> 上颌 R1</label>
+                <label><input type="checkbox" id="UR2"> 上颌 R2</label>
+                <label><input type="checkbox" id="UR3"> 上颌 R3</label>
+                <label><input type="checkbox" id="UR4"> 上颌 R4</label>
+                <label><input type="checkbox" id="UR5"> 上颌 R5</label>
+                <label><input type="checkbox" id="UR6"> 上颌 R6</label>
+                <label><input type="checkbox" id="UR7"> 上颌 R7</label>
+                <label><input type="checkbox" id="UR8"> 上颌 R8</label>
+            </div>
+
+            <!-- 下颌区域 -->
+            <div class="checkbox-grid lower-jaw">
+                <label><input type="checkbox" id="LL1"> 下颌 L1</label>
+                <label><input type="checkbox" id="LL2"> 下颌 L2</label>
+                <label><input type="checkbox" id="LL3"> 下颌 L3</label>
+                <label><input type="checkbox" id="LL4"> 下颌 L4</label>
+                <label><input type="checkbox" id="LL5"> 下颌 L5</label>
+                <label><input type="checkbox" id="LL6"> 下颌 L6</label>
+                <label><input type="checkbox" id="LL7"> 下颌 L7</label>
+                <label><input type="checkbox" id="LL8"> 下颌 L8</label>
+                <label><input type="checkbox" id="LR1"> 下颌 R1</label>
+                <label><input type="checkbox" id="LR2"> 下颌 R2</label>
+                <label><input type="checkbox" id="LR3"> 下颌 R3</label>
+                <label><input type="checkbox" id="LR4"> 下颌 R4</label>
+                <label><input type="checkbox" id="LR5"> 下颌 R5</label>
+                <label><input type="checkbox" id="LR6"> 下颌 R6</label>
+                <label><input type="checkbox" id="LR7"> 下颌 R7</label>
+                <label><input type="checkbox" id="LR8"> 下颌 R8</label>
+            </div>
+        </div>
+
       </div>
     </section>
 
@@ -102,7 +148,101 @@ $(function () {
     let opts_landmark = JSON.parse(JSON.stringify(opts));
     opts_landmark['doc_progress_bar_id'] = 'progress-bar-color'; opts_landmark['doc_progress_id'] = 'progress-color';
     ply_vis_landmark(landmark_mesh_files, landmark_point_files, 'canvas-landmark', opts_landmark);
+
+    // 候选框设置不可选
+    $('input[type="checkbox"]').each(function () {
+        let checkboxId = $(this).attr('id'); // 获取复选框的 ID
+        let exist = false;  // 是否存在对应的牙齿
+        for (let i = 0; i < landmark_mesh_files.length; i++) {
+            // 如果 ID 存在于 landmark_mesh_files 中，则加入到 selectedMeshFiles
+            if (landmark_mesh_files[i].includes(checkboxId)) {
+                exist = true;
+                break;
+            }
+        }
+        if (!exist) {
+            // 不可选
+            document.getElementById(checkboxId).disabled = true;
+            document.getElementById(checkboxId).style.borderColor = 'red';
+        }
+    });
+
+
+
+    // 监听复选框变化，重新渲染
+    $('input[type="checkbox"]').change(function () {
+        let selectedMeshFiles = [];
+        let selectedPointFiles = [];
+
+        // 遍历所有选中的复选框
+        $('input[type="checkbox"]:checked').each(function () {
+            let checkboxId = $(this).attr('id'); // 获取复选框的 ID
+
+            for (let i = 0; i < landmark_mesh_files.length; i++) {
+                // 如果 ID 存在于 landmark_mesh_files 中，则加入到 selectedMeshFiles
+                if (landmark_mesh_files[i].includes(checkboxId)) {
+                    selectedMeshFiles.push(landmark_mesh_files[i]);
+                }
+                // 如果 ID 存在于 landmark_point_files 中，则加入到 selectedPointFiles
+                if (landmark_point_files[i].includes(checkboxId)) {
+                    selectedPointFiles.push(landmark_point_files[i]);
+                }
+            }
+        });
+
+        console.log(selectedMeshFiles)
+        console.log(selectedPointFiles)
+
+        // **清除 canvas_landmark 的内容**
+        $('#canvas-landmark').empty();
+
+        // 调用 vis_ply_landmark 渲染函数
+        ply_vis_landmark(selectedMeshFiles, selectedPointFiles, 'canvas-landmark', opts_landmark);
+    });
 });
 </script>
+
+<style>
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; /* 复选框之间的间距 */
+    font-size: 18px;
+}
+
+.checkbox-grid label {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    font-size: 16px;
+    gap: 8px; /* 增加复选框与文字之间的间距 */
+}
+</style>
+
+<style>
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 每行 4 个复选框 */
+    gap: 10px; /* 复选框之间的间距 */
+    font-size: 18px; /* 字体大小 */
+    padding: 10px;
+    border-radius: 5px; /* 边框圆角 */
+}
+
+.upper-jaw {
+    background-color: #f0f8ff; /* 浅蓝色背景区分上颌 */
+    margin-bottom: 15px; /* 上下区域间距 */
+}
+
+.lower-jaw {
+    background-color: #fffacd; /* 浅黄色背景区分下颌 */
+}
+
+.checkbox-grid label {
+    display: flex;
+    align-items: center; /* 垂直居中复选框和文字 */
+    gap: 8px; /* 复选框与文字之间的间距 */
+}
+</style>
 
 {% endblock %}
