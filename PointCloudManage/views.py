@@ -204,7 +204,7 @@ def segdataset_vis_page(request):
 
 def sceneseg_display_page(request):
     folder_path = os.path.join(STATIC_DIR, SCENESEG_DIRNAME)
-    pc_names = [get_file_name(os.path.basename(file_path)) for file_path in glob(os.path.join(folder_path, 'raw', '*.ply'))]
+    pc_names = [get_file_name(os.path.basename(file_path)) for file_path in glob(os.path.join(folder_path, 'oral_scans', '*.ply'))]
     pc_names.sort()
     
     num_models = len(pc_names)
@@ -238,15 +238,26 @@ def sceneseg_vis_page(request):
         return render(request, '404.html', locals())
     pc_name = request.GET['pc_name']
 
-    exists = os.path.exists(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'raw', '%s.ply' % pc_name))
-    exists &= os.path.exists(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'color', '%s.ply' % pc_name))
-    exists &= os.path.exists(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'seg', '%s.ply' % pc_name))
-    if not exists:
-        return render(request, '404.html', locals())
+    # exists = os.path.exists(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'raw', '%s.ply' % pc_name))
+    # exists &= os.path.exists(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'color', '%s.ply' % pc_name))
+    # exists &= os.path.exists(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'seg', '%s.ply' % pc_name))
+    # if not exists:
+    #     return render(request, '404.html', locals())
 
-    raw_file_path = os.path.join('/static', SCENESEG_DIRNAME, 'raw', '%s.ply' % pc_name)
-    color_file_path = os.path.join('/static', SCENESEG_DIRNAME, 'color', '%s.ply' % pc_name)
-    seg_file_path = os.path.join('/static', SCENESEG_DIRNAME, 'seg', '%s.ply' % pc_name)
+    seg_file_path = os.path.join('/static', SCENESEG_DIRNAME, 'oral_scans', '%s.ply' % pc_name)
+    # 单独牙齿以及特征点
+    landmark_files = [get_file_name(os.path.basename(file_path))
+                      for file_path in glob(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'landmarks', pc_name, '*.ply'))]
+
+    # print(landmark_files)
+
+    landmark_mesh_files = [os.path.join('/static', SCENESEG_DIRNAME, 'landmarks', pc_name, '%s.ply' % file)
+                           for file in landmark_files if 'heatmap' not in file and 'landmark' not in file]
+    landmark_point_files = [os.path.join('/static', SCENESEG_DIRNAME, 'landmarks', pc_name, '%s.ply' % file)
+                           for file in landmark_files if 'landmark' in file]
+
+    print(landmark_point_files)
+    print(landmark_mesh_files)
     return render(request, 'sceneseg-vis.html', locals())
 
 

@@ -9,7 +9,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    场景分割
+    牙齿特征点检测
     <small>展示</small>
   </h1>
   <ol class="breadcrumb">
@@ -93,13 +93,13 @@
 $(function () {
   let opts = {
     'height_ratio': 3.0,
-    'scale_ratio': 160
+    'scale_ratio': 140
   };
   let input_file;
 
   {% for pc_name in pc_names %}
-    input_file = '/static/sceneseg/color/{{pc_name}}.ply';
-    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = true;
+    input_file = '/static/sceneseg/oral_scans/{{pc_name}}.ply';
+    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = false;
     ply_vis(input_file, 'canvas-{{pc_name}}', objClone(opts));
 
     $('#vis-btn-{{pc_name}}').click(function () {
