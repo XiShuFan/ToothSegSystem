@@ -9,7 +9,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    分割数据集
+    口扫模型分割
     <small>展示</small>
   </h1>
   <ol class="breadcrumb">
@@ -98,8 +98,9 @@ $(function () {
   let input_file;
 
   {% for pc_name in pc_names %}
-    input_file = '/static/segdataset/color/{{pc_name}}.ply';
-    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = true;
+    input_file = '/static/segdataset/oral_scans/gt_{{pc_name}}.ply';
+    opts['doc_progress_bar_id'] = 'progress-bar-{{pc_name}}'; opts['doc_progress_id'] = 'progress-{{pc_name}}'; opts['progress_hide'] = false;
+    opts['fixed_color'] = true;
     ply_vis(input_file, 'canvas-{{pc_name}}', objClone(opts));
 
     $('#vis-btn-{{pc_name}}').click(function () {

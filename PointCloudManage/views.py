@@ -161,7 +161,7 @@ def sceneupsample_vis_page(request):
 
 def segdataset_display_page(request):
     folder_path = os.path.join(STATIC_DIR, SEGDATASET_DIRNAME)
-    pc_names = [get_file_name(os.path.basename(file_path)) for file_path in glob(os.path.join(folder_path, 'raw', '*.ply'))]
+    pc_names = [get_file_name(os.path.basename(file_path)) for file_path in glob(os.path.join(folder_path, 'seg_results', '*.ply'))]
     pc_names.sort()
     
     num_models = len(pc_names)
@@ -195,15 +195,9 @@ def segdataset_vis_page(request):
         return render(request, '404.html', locals())
     pc_name = request.GET['pc_name']
 
-    exists = os.path.exists(os.path.join(STATIC_DIR, SEGDATASET_DIRNAME, 'raw', '%s.ply' % pc_name))
-    exists &= os.path.exists(os.path.join(STATIC_DIR, SEGDATASET_DIRNAME, 'color', '%s.ply' % pc_name))
-    exists &= os.path.exists(os.path.join(STATIC_DIR, SEGDATASET_DIRNAME, 'seg', '%s.ply' % pc_name))
-    if not exists:
-        return render(request, '404.html', locals())
-
-    raw_file_path = os.path.join('/static', SEGDATASET_DIRNAME, 'raw', '%s.ply' % pc_name)
-    color_file_path = os.path.join('/static', SEGDATASET_DIRNAME, 'color', '%s.ply' % pc_name)
-    seg_file_path = os.path.join('/static', SEGDATASET_DIRNAME, 'seg', '%s.ply' % pc_name)
+    raw_file_path = os.path.join('/static', SEGDATASET_DIRNAME, 'oral_scans', 'gt_%s.ply' % pc_name)
+    seg_file_path = os.path.join('/static', SEGDATASET_DIRNAME, 'seg_results', '%s.ply' % pc_name)
+    gt_file_path = os.path.join('/static', SEGDATASET_DIRNAME, 'oral_scans', 'gt_%s.ply' % pc_name)
     return render(request, 'segdataset-vis.html', locals())
 
 
