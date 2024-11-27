@@ -197,4 +197,39 @@ $(function () {
 });
 </script>
 
+<script>
+    // 连接后端进行分割-特征点检测
+    $('#seg-landmark-btn').click(async function () {
+        let file_upload = $('#file');
+        let file_path = file_upload[0].value;
+
+        let folder_name = $('#folder-name-select').val()
+        let file_form = $('#file_form');
+
+        console.log("进入")
+
+        let form_data = new FormData(file_form[0]);
+        form_data.append('folder_name', folder_name);
+
+        $.ajax({
+            url: '/mypcbase_predict/',
+            type: 'POST',
+            data: form_data,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.succ == 1) {
+                    console.log("预测成功")
+                } else {
+                    // 错误处理
+                    console.log("预测失败")
+                }
+            }
+        });
+
+        // 关闭在线预测按钮
+        document.getElementById('seg-landmark-box').style.display = 'none';
+    });
+</script>
+
 {% endblock %}

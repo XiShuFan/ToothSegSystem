@@ -6,3 +6,4 @@ plyfile
 opencv-python
 easydict
 tqdm
+requests

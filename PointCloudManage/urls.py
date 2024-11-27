@@ -26,6 +26,7 @@ urlpatterns = [
     path('mypcbase-folder-display-page/', views.mypcbase_folder_display_page, name='mypcbase-folder-display-page'),
     path('mypcbase-upload-page/', views.mypcbase_upload_page, name='mypcbase-upload-page'),
     path('mypcbase-upload/', views.mypcbase_upload, name='mypcbase-upload'),
+    path('mypcbase_predict/', views.mypcbase_predict, name='mypcbase_predict'),
     path('mypcbase-delete/', views.mypcbase_delete, name='mypcbase-delete'),
     path('mypcbase-folder-delete-all/', views.mypcbase_folder_delete_all, name='mypcbase-folder-delete-all'),
     path('mypcbase-vis-page/<str:folder_name>/<str:pc_name>/', views.mypcbase_vis_page, name='mypcbase-vis-page'),

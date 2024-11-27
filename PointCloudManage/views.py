@@ -11,6 +11,8 @@ import json
 import math
 import cv2
 import numpy as np
+import requests
+from requests.exceptions import RequestException, Timeout, HTTPError, ConnectionError
 
 from PointCloudManage.exception import FileExistsException, ShapeException, FileNotExistsException, NoFilesException
 from PointCloudManage.utils import clear_dir_with_time, get_file_name, generate_points_obj, upsample_points, save_file, get_file_ext, load_file, xyz2ply_with_rgb, zip_dir, delete_files_and_dirs, clear_dir, count_num_files_for_dir, xyz2ply, normalize_points
@@ -529,6 +531,68 @@ def mypcbase_upload(request):
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
+@csrf_exempt
+def mypcbase_predict(request):
+    try:
+        folder_name = 'default'
+        if 'folder_name' in request.POST:
+            folder_name = request.POST['folder_name']
+        obj = request.FILES.get('file')
+        if not obj:
+            return HttpResponse(json.dumps({'succ': 0, 'json': 'No file uploaded'}), content_type="application/json")
+
+        file_name = get_file_name(obj.name)
+        file_ext = get_file_ext(obj.name)
+        file_name = file_name.replace('.', '_')
+        local_file_path = os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name, '%s.%s' % (file_name, file_ext))
+        target_url = 'http://3b9e0c88.r24.cpolar.top/predict_file/'  # 目标服务器的上传 URL
+
+        # 获取目标服务器的 CSRF token
+        session = requests.Session()
+
+        # 获取 CSRF token
+        # csrf_token = session.cookies.get('csrftoken')
+        # if not csrf_token:
+        #     return HttpResponse(json.dumps({'succ': 0, 'json': 'CSRF token not found'}),
+        #                         content_type="application/json")
+
+        # 使用 POST 请求上传文件
+        with open(local_file_path, 'rb') as f:
+            files = {'file': (os.path.basename(local_file_path), f)}  # 包装文件
+            # headers = {
+            #     'X-CSRFToken': csrf_token  # 添加 CSRF token 到请求头
+            # }
+            # print(f"Headers: {headers}")
+            print(f"Local file path: {local_file_path}")
+
+            # 使用 POST 请求上传文件
+            response = session.post(target_url, files=files)
+
+            if response.status_code == 200:
+                data = {'succ': 1, 'json': response.json()}  # 成功信息
+            else:
+                data = {'succ': 0, 'json': response.text}  # 错误信息
+
+        print("End of predict")
+
+    except Timeout as e:
+        print(f"请求超时: {e}")
+        data = {'succ': 0, 'json': str(e)}
+    except ConnectionError as e:
+        print(f"连接错误: {e}")
+        data = {'succ': 0, 'json': str(e)}
+    except HTTPError as e:
+        print(f"HTTP 错误: {e}")
+        data = {'succ': 0, 'json': str(e)}
+    except RequestException as e:
+        print(f"请求异常: {e}")
+        data = {'succ': 0, 'json': str(e)}
+    except Exception as e:
+        print(f"发生了意外的错误: {e}")
+        data = {'succ': 0, 'json': str(e)}
+
+    print(data)
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 def mypcbase_delete(request):
     try:
