@@ -9,7 +9,7 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        我的点云模型库
+        口扫模型库
         <small>上传</small>
         <button id="display-btn" class="btn btn-xs btn-primary">查看模型</button>
       </h1>
@@ -25,7 +25,7 @@
    <!-- Main content -->
     <section class="content">
         <div class="row text-center">
-            <h4 class="text-primary">请上传三维点云模型文件（当前支持格式：xyz、npy）</h4>
+            <h4 class="text-primary">请上传口扫模型文件（*.ply）</h4>
         </div>
         <div class="row">
             <div class="col-xs-offset-3">
@@ -47,6 +47,9 @@
                     <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
                         0%
                     </div>
+                </div>
+                <div id="seg-landmark-box" style="text-align: center;">
+                    <button id="seg-landmark-btn" class="btn btn-sm btn-primary">连接服务器：口扫分割/牙齿特征点检测</button>
                 </div>
             </div>
         </div>
@@ -92,6 +95,8 @@ $(function () {
         4: '模型已经存在'
     }
 
+    document.getElementById('seg-landmark-box').style.display = 'none';
+
     $('#display-btn').click(function () {
         window.location.href = '/mypcbase-display-page/';
     });
@@ -118,7 +123,7 @@ $(function () {
             return; 
         }
         let ext = file_path.split('.').pop();
-        if (ext != 'xyz' && ext != 'npy') {
+        if (ext != 'ply') {
             openErrMsgBox('<strong>抱歉！</strong> 您上传的文件格式不正确');
             return;
         }
@@ -178,13 +183,16 @@ $(function () {
                     let input_file_path = data.outputpath;
                     let texture_file_path = '/static/pcupsample/texture.png';
                     $('#progress').show();
-                    vis(input_file_path, 'canvas', texture_file_path, opts);
+                    ply_vis(input_file_path, 'canvas', opts);
                 } else {
                     let errmsg = errcode2msg[data.errcode];
                     openErrMsgBox('<strong>抱歉！</strong> 文件上传失败：' + errmsg);
                 }
             }
         });
+
+        // 显示在线预测按钮
+        document.getElementById('seg-landmark-box').style.display = 'block';
     });
 });
 </script>

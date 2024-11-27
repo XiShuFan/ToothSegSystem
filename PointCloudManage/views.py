@@ -508,15 +508,15 @@ def mypcbase_upload(request):
             f.write(chunk)
         f.close()
 
-        output_dir = os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name)
-        file_name = get_file_name(file_path)
-        if get_file_ext(file_path) != 'xyz':
-            points = load_file(file_path)
-            save_file(output_dir, '%s.xyz' % file_name, points)
+        # output_dir = os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name)
+        # file_name = get_file_name(file_path)
+        # if get_file_ext(file_path) != 'xyz':
+        #     points = load_file(file_path)
+        #     save_file(output_dir, '%s.xyz' % file_name, points)
 
-        output_file_path = os.path.join(output_dir, '%s.obj' % file_name)
-        generate_points_obj(file_path, output_file_path, prog_record=True)
-        data = { 'succ': 1, 'outputpath': os.path.join('/static', MYPCBASE_DIRNAME, folder_name, '%s.obj' % get_file_name(file_path)) }
+        # output_file_path = os.path.join(output_dir, '%s.obj' % file_name)
+        # generate_points_obj(file_path, output_file_path, prog_record=True)
+        data = { 'succ': 1, 'outputpath': os.path.join('/static', MYPCBASE_DIRNAME, folder_name, '%s.%s' % (file_name, file_ext)) }
     except TypeError:
         data = { 'succ': 0, 'errcode': 2 }
     except ShapeException:
