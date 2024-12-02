@@ -266,12 +266,11 @@ def sceneseg_vis_page(request):
 
 
 def _get_mypcbase_pc_names(folder_name='default'):
-    files = glob(os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name, '*.xyz'))
+    files = glob(os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name, '*.ply'))
     pc_names = []
     for file in files:
         pc_name = get_file_name(file)
-        upsampled = os.path.exists(os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name, UPSAMPLE_DIRNAME, '%s.xyz' % pc_name))
-        pc_names.append({'pc_name': pc_name, 'upsampled': upsampled})
+        pc_names.append({'pc_name': pc_name})
     return pc_names
 
 def _get_mypcbase_folders():

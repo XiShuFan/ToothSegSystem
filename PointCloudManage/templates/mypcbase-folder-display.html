@@ -9,7 +9,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    我的点云模型库
+    口扫模型库
     <small>当前目录：{{folder_name}}</small>
     <button id="back-btn" class="btn btn-xs btn-success">返回上一级</button>
     <button id="upload-btn" class="btn btn-xs btn-success">上传模型</button>
@@ -18,7 +18,7 @@
   </h1>
   <ol class="breadcrumb">
     <li><a href="/index/"><i class="fa fa-user"></i>主页</a></li>
-    <li><a href='/mypcbase-display-page/'><i class="fa fa-folder"></i>我的点云模型库</a></li>
+    <li><a href='/mypcbase-display-page/'><i class="fa fa-folder"></i>口扫模型库</a></li>
     <li class="active"><a><i class="fa fa-folder"></i>{{folder_name}}</a></li>
   </ol>
 </section>
@@ -47,13 +47,6 @@
                       <button id="download-btn-{{ele.pc_name}}" class="btn btn-xs btn-primary">下载</button>
                       <button id="move-btn-{{ele.pc_name}}" class="btn btn-xs btn-warning">移动</button>
                       <button id="delete-btn-{{ele.pc_name}}" class="btn btn-xs btn-warning">删除</button>
-                      {% if ele.upsampled %}
-                        <button id="upsample-btn-{{ele.pc_name}}" class="btn btn-xs btn-success hidden">上采样</button>
-                        <button id="vis-upsample-btn-{{ele.pc_name}}" class="btn btn-xs btn-success">查看上采样</button>
-                      {% else %}
-                        <button id="upsample-btn-{{ele.pc_name}}" class="btn btn-xs btn-success">上采样</button>
-                        <button id="vis-upsample-btn-{{ele.pc_name}}" class="btn btn-xs btn-success hidden">查看上采样</button>
-                      {% endif %}
                     </div>
                   </div>
                 </div>
@@ -274,9 +267,9 @@ $(function () {
   });
 
   {% for ele in pc_names %}
-    input_file = '/static/mypcbase/{{folder_name}}/{{ele.pc_name}}.obj';
-    opts['doc_progress_bar_id'] = 'progress-bar-{{ele.pc_name}}'; opts['doc_progress_id'] = 'progress-{{ele.pc_name}}'; opts['progress_hide'] = true;
-    vis(input_file, 'canvas-{{ele.pc_name}}', texture_file_path, objClone(opts));
+    input_file = '/static/mypcbase/{{folder_name}}/{{ele.pc_name}}.ply';
+    opts['doc_progress_bar_id'] = 'progress-bar-{{ele.pc_name}}'; opts['doc_progress_id'] = 'progress-{{ele.pc_name}}'; opts['progress_hide'] = false;
+    ply_vis(input_file, 'canvas-{{ele.pc_name}}', objClone(opts));
 
     $('#vis-btn-{{ele.pc_name}}').click(function () {
       $('#vis-type-box-pc-name-label').hide();
