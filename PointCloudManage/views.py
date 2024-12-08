@@ -13,6 +13,7 @@ import cv2
 import numpy as np
 import requests
 from requests.exceptions import RequestException, Timeout, HTTPError, ConnectionError
+import base64
 
 from PointCloudManage.exception import FileExistsException, ShapeException, FileNotExistsException, NoFilesException
 from PointCloudManage.utils import clear_dir_with_time, get_file_name, generate_points_obj, upsample_points, save_file, get_file_ext, load_file, xyz2ply_with_rgb, zip_dir, delete_files_and_dirs, clear_dir, count_num_files_for_dir, xyz2ply, normalize_points
@@ -544,7 +545,7 @@ def mypcbase_predict(request):
         file_ext = get_file_ext(obj.name)
         file_name = file_name.replace('.', '_')
         local_file_path = os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name, '%s.%s' % (file_name, file_ext))
-        target_url = 'http://3b9e0c88.r24.cpolar.top/predict_file/'  # 目标服务器的上传 URL
+        target_url = 'http://663dee45.r24.cpolar.top/predict_file/'  # 目标服务器的上传 URL
 
         # 获取目标服务器的 CSRF token
         session = requests.Session()
@@ -569,6 +570,25 @@ def mypcbase_predict(request):
 
             if response.status_code == 200:
                 data = {'succ': 1, 'json': response.json()}  # 成功信息
+                base64_content = response.json().get('file_content')
+                # 解码 Base64 字符串
+                file_data = base64.b64decode(base64_content)
+                # 写入到本地文件
+                with open(os.path.join(STATIC_DIR, SEGDATASET_DIRNAME, 'oral_scans', 'gt_%s.%s' % (file_name, file_ext)), 'wb') as f:  # 可以选择一个不同的文件路径
+                    f.write(file_data)
+                with open(os.path.join(STATIC_DIR, SEGDATASET_DIRNAME, 'seg_results', '%s.%s' % (file_name, file_ext)), 'wb') as f:  # 可以选择一个不同的文件路径
+                    f.write(file_data)
+
+                landmarks = response.json().get('landmarks')
+                if len(landmarks) != 0:
+                    with open(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'oral_scans', '%s.%s' % (file_name, file_ext)), 'wb') as f:  # 可以选择一个不同的文件路径
+                        f.write(file_data)
+                    os.mkdir(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'landmarks', file_name))
+                    for lm_name, lm_data in landmarks.items():
+                        lm_data = base64.b64decode(lm_data)
+                        with open(os.path.join(STATIC_DIR, SCENESEG_DIRNAME, 'landmarks', file_name, lm_name), 'wb') as f:
+                            f.write(lm_data)
+                        print(lm_name)
             else:
                 data = {'succ': 0, 'json': response.text}  # 错误信息
 
