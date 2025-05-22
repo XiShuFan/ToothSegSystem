@@ -18,4 +18,5 @@ def main():
 
 
 if __name__ == '__main__':
+    # python manage.py runserver 127.0.0.1:2000
     main()
