@@ -545,7 +545,7 @@ def mypcbase_predict(request):
         file_ext = get_file_ext(obj.name)
         file_name = file_name.replace('.', '_')
         local_file_path = os.path.join(STATIC_DIR, MYPCBASE_DIRNAME, folder_name, '%s.%s' % (file_name, file_ext))
-        target_url = 'http://1c2052e6.r38.cpolar.top/predict_file/'  # 目标服务器的上传 URL
+        target_url = 'http://3672c6ae.r38.cpolar.top/predict_file/'  # 目标服务器的上传 URL
 
         # 获取目标服务器的 CSRF token
         session = requests.Session()
@@ -610,7 +610,7 @@ def mypcbase_predict(request):
         print(f"发生了意外的错误: {e}")
         data = {'succ': 0, 'json': str(e)}
 
-    print(data)
+    # print(data)
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 def mypcbase_delete(request):

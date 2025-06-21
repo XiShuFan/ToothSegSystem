@@ -221,9 +221,11 @@ $(function () {
             success: function (data) {
                 if (data.succ == 1) {
                     console.log("预测成功")
+                    window.alert("预测成功")
                 } else {
                     // 错误处理
                     console.log("预测失败")
+                    window.alert("预测失败")
                 }
             }
         });
